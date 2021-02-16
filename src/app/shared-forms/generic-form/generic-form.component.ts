@@ -38,9 +38,11 @@ export interface ISubmitEvent {
   value: {[key: string]: any};
 }
 export abstract class GenericForm{
+  // ABSTRACT CLASS TO USE WITH MULTIPLE FORM TEMPLATE COMPONENTS
   formConfig: IFormConfig;
   constructor(private fb:FormBuilder){}
   initForm(formConfig: IFormConfig){
+    // TURN THE CONFIG OBJECT INTO A REACTIVE FORM
     const formObject = {}
     // iterate formFields build formGroup dynamically
     for(let field of formConfig.formFields){
@@ -62,6 +64,7 @@ export abstract class GenericForm{
     }
   }
   getInitialValidators(validators:any[],field:IFormField, formObject:{[key: string]: any}){
+    // LOOP OVER CONFIG VALIDATORS FOR EACH FIELD
     for(let validator of field.validations) {
       switch(validator){
         case 'required':
@@ -103,7 +106,9 @@ export class GenericFormComponent extends GenericForm implements OnInit, AfterVi
     super(new FormBuilder);
   }
   ngOnChanges(changes: SimpleChanges): void {
+    // TRIGGERS ONLY AT TOP COMPONENT TREE OF THIS FORM TREE
     if(changes.footerText){
+      // THEN START RECURSING CHILD FORMS TO UPDATE TXT
       this.findLowestComponentRef(changes.footerText.currentValue);
     };
   }
@@ -114,15 +119,18 @@ export class GenericFormComponent extends GenericForm implements OnInit, AfterVi
     });
   }
   ngAfterViewChecked(): void {
+    // AVOID CONTENT CHANGED AFTER VIEW CHECKED ERROR
     this.cdr.detectChanges();
   }
   submitForm(initialForm, status){
+    // IF REACTIVE FORM IS VALID LOAD ANOTHER INSTANCE OF THIS FORM INTO ITSELF
     if(status === 'VALID'){
       this.onSubmit.emit(initialForm.value);
       this.loadComponent();
     }
   }
   loadComponent(){
+    // COMPONENT LOADS ITSELF INTO ITSELF
     const factory = this.cfr.resolveComponentFactory(GenericFormComponent);
     this.componentRef = this.vc.createComponent(factory);
     this.componentRef.instance.formConfig = {...this.formConfig};
@@ -131,6 +139,7 @@ export class GenericFormComponent extends GenericForm implements OnInit, AfterVi
     })
   }
   findLowestComponentRef(text: string, caller?: any){
+    // RECURSIVE FUNCTION TO FIND 1 BEFORE LEAF COMPONENT AND UPDATE TEXT
     if(!this.componentRef){
       console.log('end');
       caller._footerText = text;

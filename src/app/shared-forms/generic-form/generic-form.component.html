@@ -5,13 +5,13 @@
         <ng-container [ngSwitch]="formField.type">
           <ng-container *ngSwitchCase="'text'">
             <mat-form-field appearance="fill" >
-              <mat-label>Input</mat-label>
+              <mat-label>Type {{formField.name}} (metric, imperial)</mat-label>
               <input matInput [formControlName]="formField.name">
             </mat-form-field>
           </ng-container>
           <ng-container *ngSwitchCase="'select'">
             <mat-form-field appearance="fill">
-              <mat-label>Select</mat-label>
+              <mat-label>Select {{formField.name}}</mat-label>
               <mat-select [formControlName]="formField.name">
                   <mat-option *ngFor="let option of formField.options" value="{{option['value']}}" >{{option['text']}}</mat-option>
               </mat-select>
