@@ -1,0 +1,35 @@
+<div class="justifyCenter">
+  <form [formGroup]="initalForm">
+    <div>
+      <ng-container *ngFor="let formField of formConfig.formFields; index as i;">
+        <ng-container [ngSwitch]="formField.type">
+          <ng-container *ngSwitchCase="'text'">
+            <mat-form-field appearance="fill" >
+              <mat-label>Input</mat-label>
+              <input matInput [formControlName]="formField.name">
+            </mat-form-field>
+          </ng-container>
+          <ng-container *ngSwitchCase="'select'">
+            <mat-form-field appearance="fill">
+              <mat-label>Select</mat-label>
+              <mat-select [formControlName]="formField.name">
+                  <mat-option *ngFor="let option of formField.options" value="{{option['value']}}" >{{option['text']}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div class="justifyCenter">
+      <button mat-icon-button type="submit"
+              (click)="submitForm(initalForm, initalForm.status)"
+              [color]="initalForm.status === 'VALID' ?  'black' : 'warn' ">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </form>
+</div>
+<div style="text-align: center">
+  <b>{{_footerText}}</b>
+</div>
+<ng-container #componentContainer></ng-container>
